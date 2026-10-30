@@ -27,7 +27,7 @@ def fetch_IT_Jobs(keyword, region, angebotsart=1, page=1, size=100):
         "page": page,
         "size": size,
     }
-  URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobs"
+  URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs"
   resp = requests.get(URL, headers=API_KEY, params=params, timeout=10)
   resp.raise_for_status()
   return resp.json()
