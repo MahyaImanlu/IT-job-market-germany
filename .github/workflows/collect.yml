@@ -20,7 +20,7 @@ jobs:
 
       - run: pip install requests
 
-      - run: python collector.py
+      - run: python collector/collector.py
 
       - name: Commit data
         run: |
