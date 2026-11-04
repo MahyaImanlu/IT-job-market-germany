@@ -19,7 +19,7 @@ KEYWORDS = [
 OUTPUT_DIR = "data/raw"
 
 
-def fetch_IT_Jobs(keyword, region, angebotsart=1, page=1, size=100):
+def fetch_IT_Jobs(keyword, region, angebotsart=1, page=1, size=100, retries=3):
   params = {
         "was": keyword,
         "wo": region,
@@ -28,9 +28,15 @@ def fetch_IT_Jobs(keyword, region, angebotsart=1, page=1, size=100):
         "size": size,
     }
   URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs"
-  resp = requests.get(URL, headers=API_KEY, params=params, timeout=10)
-  resp.raise_for_status()
-  return resp.json()
+  for attempt in range(retries):
+    try:
+      resp = requests.get(URL, headers=API_KEY, params=params, timeout=10)
+      resp.raise_for_status()
+      return resp.json()
+    except requests.exceptions.RequestException:
+      if attempt == retries - 1:
+        raise
+      time.sleep(3 * (attempt + 1))
 
 
 def save_raw(region, keyword, data):
